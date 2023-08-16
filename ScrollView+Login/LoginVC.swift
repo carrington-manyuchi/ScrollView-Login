@@ -30,6 +30,7 @@ class LoginVC: UIViewController {
         label.text = "Welcome"
         label.textColor = UIColor.label
         label.font = UIFont(name: "avenir", size: 25)
+        label.font = UIFont.systemFont(ofSize: 25, weight: .semibold)
         label.textAlignment = .center
         return label
     }()
@@ -38,9 +39,10 @@ class LoginVC: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Sign in and have fun"
-        label.textColor = UIColor.label
-        label.font = UIFont(name: "avenir", size: 25)
-        label.textAlignment = .center
+        label.textColor = UIColor.white
+        label.font = UIFont(name: "avenir", size: 18)
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.textAlignment = .left
         return label
     }()
     
@@ -88,6 +90,20 @@ class LoginVC: UIViewController {
         return textField
     }()
     
+    
+    private let signInButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Sign in", for: UIControl.State.normal)
+        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        button.layer.backgroundColor = UIColor.red.cgColor
+        button.layer.cornerRadius = 25
+        button.layer.shadowOffset = CGSize(width: 2, height: 3)
+        button.layer.shadowOpacity = 0.7
+        button.layer.shadowColor = UIColor.black.cgColor
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -97,6 +113,8 @@ class LoginVC: UIViewController {
         contentView.addSubview(headingImage)
         contentView.addSubview(usernameTextField)
         contentView.addSubview(passwordTextField)
+        contentView.addSubview(headingTwoLabel)
+        contentView.addSubview(signInButton)
         configureConstraints()
     }
     
@@ -116,12 +134,12 @@ class LoginVC: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: loginScrollView.trailingAnchor),
             
             contentView.widthAnchor.constraint(equalTo: loginScrollView.widthAnchor),
-            contentView.heightAnchor.constraint(equalTo: loginScrollView.heightAnchor, multiplier: 2)
+            //contentView.heightAnchor.constraint(equalTo: loginScrollView.heightAnchor, multiplier: 2)
         ]
         
-//        let hConst = contentView.heightAnchor.constraint(equalTo: loginScrollView.heightAnchor)
-//        hConst.isActive = true
-//        hConst.priority = UILayoutPriority(50)
+        let hConst = contentView.heightAnchor.constraint(equalTo: loginScrollView.heightAnchor)
+        hConst.isActive = true
+        hConst.priority = UILayoutPriority(50)
         
         let composeHeadingLabel = [
             headingLabel.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 25),
@@ -135,18 +153,35 @@ class LoginVC: UIViewController {
             headingImage.widthAnchor.constraint(equalToConstant: 200)
         ]
         
+        let composeHeadingTwoLabel = [
+            headingTwoLabel.topAnchor.constraint(equalTo: headingImage.bottomAnchor),
+            headingTwoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+            headingTwoLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25)
+            //headingTwoLabel.
+        ]
+        
         let composeUsernameTextField = [
-            usernameTextField.topAnchor.constraint(equalTo: headingImage.bottomAnchor, constant: 35),
+            usernameTextField.topAnchor.constraint(equalTo: headingTwoLabel.bottomAnchor, constant: 35),
             usernameTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25),
             usernameTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25),
-            usernameTextField.heightAnchor.constraint(equalToConstant: 40)
+            usernameTextField.heightAnchor.constraint(equalToConstant: 45)
         ]
         
         let composePasswordTextField = [
             passwordTextField.topAnchor.constraint(equalTo: usernameTextField.bottomAnchor, constant: 25),
             passwordTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25),
             passwordTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25),
-            passwordTextField.heightAnchor.constraint(equalToConstant: 40)
+            passwordTextField.heightAnchor.constraint(equalToConstant: 45)
+        ]
+        
+        let composeSignInButton = [
+            signInButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 25),
+//            signInButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25),
+//            signInButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25),
+            signInButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            signInButton.heightAnchor.constraint(equalToConstant: 50),
+            signInButton.widthAnchor.constraint(equalToConstant: 280),
+            signInButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -50)
         ]
         
         NSLayoutConstraint.activate(composeloginScrollView)
@@ -155,6 +190,8 @@ class LoginVC: UIViewController {
         NSLayoutConstraint.activate(composeHeadingImage)
         NSLayoutConstraint.activate(composeUsernameTextField)
         NSLayoutConstraint.activate(composePasswordTextField)
+        NSLayoutConstraint.activate(composeHeadingTwoLabel)
+        NSLayoutConstraint.activate(composeSignInButton)
     }
 
 }
