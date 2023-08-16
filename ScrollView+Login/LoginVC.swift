@@ -10,8 +10,6 @@ import UIKit
 class LoginVC: UIViewController {
     
     //MARK: - UI Componets
-    
-    
     private let loginScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -37,7 +35,13 @@ class LoginVC: UIViewController {
         return label
     }()
     
-    
+    private let headingImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.image = #imageLiteral(resourceName: "loginLogo")
+        return imageView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +49,7 @@ class LoginVC: UIViewController {
         view.addSubview(loginScrollView)
         loginScrollView.addSubview(contentView)
         contentView.addSubview(headingLabel)
+        contentView.addSubview(headingImage)
         configureConstraints()
     }
     
@@ -64,7 +69,6 @@ class LoginVC: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: loginScrollView.trailingAnchor),
             
             contentView.widthAnchor.constraint(equalTo: loginScrollView.widthAnchor),
-            
             contentView.heightAnchor.constraint(equalTo: loginScrollView.heightAnchor, multiplier: 2)
         ]
         
@@ -75,12 +79,21 @@ class LoginVC: UIViewController {
         let composeHeadingLabel = [
             headingLabel.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 25),
             headingLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
-
+        ]
+        
+        let  composeHeadingImage = [
+            headingImage.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 50),
+            headingImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            
+            
+            headingImage.heightAnchor.constraint(equalToConstant: 350),
+            headingImage.widthAnchor.constraint(equalToConstant: 200)
         ]
         
         NSLayoutConstraint.activate(composeloginScrollView)
         NSLayoutConstraint.activate(composeContentView)
         NSLayoutConstraint.activate(composeHeadingLabel)
+        NSLayoutConstraint.activate(composeHeadingImage)
     }
 
 }
