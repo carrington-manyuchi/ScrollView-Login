@@ -50,6 +50,7 @@ class LoginVC: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+        //imageView.clipsToBounds = true
         imageView.image = #imageLiteral(resourceName: "loginLogo")
         return imageView
     }()
@@ -58,17 +59,21 @@ class LoginVC: UIViewController {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Enter username"
+        textField.textColor = .black
+        textField.clearButtonMode = .always
+        //textField.borderStyle = .roundedRect
         textField.layer.cornerRadius = 20
         textField.layer.shadowOffset = CGSize(width: 2, height: 1)
         textField.layer.shadowOpacity = 0.5
         textField.layer.shadowColor = UIColor.black.cgColor
+       // textField.layer.masksToBounds = true
         textField.backgroundColor = .systemGray5
-        
+        textField.returnKeyType  = .next
+       // textField.setLeftPaddingPoints(20)
         let leftView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: 25.0, height: 0.0))
         textField.leftView = leftView
         textField.rightView = leftView
         textField.leftViewMode = .always
-        textField.rightViewMode = .always
         return textField
     }()
     
@@ -81,12 +86,13 @@ class LoginVC: UIViewController {
         textField.layer.shadowOpacity = 0.5
         textField.layer.shadowColor = UIColor.black.cgColor
         textField.backgroundColor = .systemGray5
-        
+        textField.clearButtonMode = .always
+        textField.returnKeyType = .done
         let leftView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: 25.0, height: 0.0))
         textField.leftView = leftView
         textField.rightView = leftView
         textField.leftViewMode = .always
-        textField.rightViewMode = .always
+        //textField.rightViewMode = .always
         return textField
     }()
     
@@ -104,8 +110,16 @@ class LoginVC: UIViewController {
         return button
     }()
     
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .lightContent
+//    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+    }
+    
+    private func setupUI() {
         view.backgroundColor = .systemBackground
         view.addSubview(loginScrollView)
         loginScrollView.addSubview(contentView)
@@ -116,6 +130,43 @@ class LoginVC: UIViewController {
         contentView.addSubview(headingTwoLabel)
         contentView.addSubview(signInButton)
         configureConstraints()
+        
+        //MARK: - TextField Delegates
+        usernameTextField.delegate = self
+        passwordTextField.delegate = self
+        
+        //MARK: - Hide Keyboard when view is tapped
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
+        tapGesture.numberOfTapsRequired = 1
+        view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(tapGesture)
+        
+        
+        
+        //MARK: - Handle keyboard notification
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
+    @objc func dismissKeyboard(_ recogniser: UITapGestureRecognizer) {
+        print("backgroundview is Tapped")
+    }
+    
+    @objc func keyboardDidShow(_ notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size {
+            let edgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
+            loginScrollView.contentInset = edgeInsets
+        }
+    }
+    
+    @objc func keyboardDidHide(_ notification: NSNotification) {
+        
+            let edgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: -50, right: 0.0)
+            loginScrollView.contentInset = edgeInsets
     }
     
     private func configureConstraints() {
@@ -196,3 +247,14 @@ class LoginVC: UIViewController {
 
 }
 
+extension LoginVC: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == usernameTextField {
+            passwordTextField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+        return true
+    }
+}
